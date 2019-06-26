@@ -12,6 +12,6 @@ exports.bandsInTown = {
 
 exports.ombd = {
   key: process.env.OMBD_KEY
-}
+};
 
 // bands key 34ca1ba5-4e38-4d1f-bc68-89f3cee2c097
