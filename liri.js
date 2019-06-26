@@ -1,34 +1,36 @@
-
+//// requiring our keys, axios and dotenv module exported from keys.js
 require("dotenv").config();
 var keys = require("./keys.js");
-// var spotify = new Spotify(keys.spotify);
-
+var fs = require("fs");
 var axios = require("axios");
 
+//command would be what the user ask liri to do. ex: 'concert-this'.
+var command = process.argv[2];
 
-// node liri.js paul mc cartney
-// ['node', 'liri.js', 'paul', 'mc', 'cartney']
-// array.slice(2)
-// * `concert-this`
-// * `spotify-this-song`
-// * `movie-this`
-// * `do-what-it-says`
-// node liri.js concert-this paul mc cartney
-// node liri.js movie-this the incredibles
+//argument is whatever the user is searching for after typing the command
+var argument = process.argv.slice(3).join(" ");
 
-const command = process.argv[2];
-
+//links commands with the function liri would be responding with
 if (command === "concert-this") {
-  var artist = process.argv.slice(3).join(" ");
-  searchForConcerts(artist);
+  searchForConcerts(argument);
 } else if (command === "movie-this") {
-  var movie = process.argv.slice(3).join(" ");
-  searchForMovie(movie);
+  searchForMovie(argument);
 } else if (command === "spotify-this-song") {
-  var track = process.argv.slice(3).join(" ");
-  searchForTrack(track);
+  searchForTrack(argument);
+} else if (command === "do-what-it-says") {
+  fs.readFile("random.txt", "utf8", function (error, data) {
+
+    if (error) {
+      return console.log(error);
+    }
+    // console.log(data);
+    var dataArr = data.split(",");
+    console.log(dataArr);
+
+  });
 }
 
+//this function is the one searching for the track the user enters using the spotify api and console.logs the information we we want to show with the app. 
 function searchForTrack(track) {
   var Spotify = require('node-spotify-api');
   var spotify = new Spotify({
@@ -49,15 +51,9 @@ function searchForTrack(track) {
       }
     }
   });
-
-
-  // if (process.argv[2] === "spotify-this-song") {
-  //   var track = process.argv.slice(3).join(" ");
-  //   axios.get("https://api.spotify.com/v1/search" + track)
-  // }
 }
 
-
+// this function is searching for the movie information using the omdb api by getting the information using axios
 function searchForMovie(movie) {
   axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=" + keys.ombd.key).then(function (response) {
     if (response.data !== undefined) {
@@ -92,6 +88,7 @@ function searchForMovie(movie) {
     });
 }
 
+//this function is searching for concerts using the bands in town api, a for loop was used to show all the results of 
 function searchForConcerts(artist) {
   axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + keys.bandsInTown.clientId).then(function (response) {
     if (response.data.length > 0) {
