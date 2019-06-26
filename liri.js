@@ -24,28 +24,54 @@ if (command === "concert-this") {
 } else if (command === "movie-this") {
   var movie = process.argv.slice(3).join(" ");
   searchForMovie(movie);
+} else if (command === "spotify-this-song") {
+  var track = process.argv.slice(3).join(" ");
+  searchForTrack(track);
 }
 
-// var Spotify = require('node-spotify-api');
-// var spotify = new Spotify({
-//   id: keys.spotify.id,
-//   secret: keys.spotify.secret
-// });
+function searchForTrack(track) {
+  var Spotify = require('node-spotify-api');
+  var spotify = new Spotify({
+    id: keys.spotify.id,
+    secret: keys.spotify.secret
+  });
+  spotify.search({ type: 'track', query: track }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+    else {
+      console.log("Your song information: ");
+      console.log("Song's name: " + data.tracks.items[0].name);
+      console.log("Preview of the song: " + data.tracks.items[0].external_urls.spotify);
+      console.log("Album: " + data.tracks.items[0].album.name);
+      for (let i = 0; i < data.tracks.items[0].artists.length; i++) {
+        console.log("Artist: " + data.tracks.items[0].artists[i].name);
+      }
+    }
+  });
 
-// if (process.argv[2] === "spotify-this-song") {
-//   var track = process.argv.slice(3).join(" ");
-//   axios.get("GET https://api.spotify.com/v1/search"+ track)
-// }
+
+  // if (process.argv[2] === "spotify-this-song") {
+  //   var track = process.argv.slice(3).join(" ");
+  //   axios.get("https://api.spotify.com/v1/search" + track)
+  // }
+}
+
 
 function searchForMovie(movie) {
-  axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&" + keys.ombd.key).then(function (response) {
-    if (response.data.length > 0) {
+  axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=" + keys.ombd.key).then(function (response) {
+    if (response.data !== undefined) {
       console.log("Your movie information: ");
-      for (let i = 0; i < response.data.length; i++) {
-        const event = response.data[i];
-        console.log(response.data[i].title + " " + response.data[i].year + " " + response.data[i].imdbRating + " " + response.data[i].Ratings[1].value + " " + response.data[i].country + " " + response.data[i].Ratings[1].language + " " + response.data[i].plot + " " + response.data[i].actors);
-      }
-    } else {
+      console.log("Title: " + response.data.Title);
+      console.log("Year: " + response.data.Year);
+      console.log("ImdbRating: " + response.data.imdbRating);
+      console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+      console.log("Country where the movie was produced: " + response.data.Country);
+      console.log("Language: " + response.data.Language);
+      console.log("Plot: " + response.data.Plot);
+      console.log("Actors: " + response.data.Actors);
+    }
+    else {
       console.log("No movie available :(");
     }
   })
@@ -72,7 +98,9 @@ function searchForConcerts(artist) {
       console.log("Artist Events: ");
       for (let i = 0; i < response.data.length; i++) {
         const event = response.data[i];
-        console.log(event.datetime + " " + event.venue.name + " " + event.venue.city + " " + event.venue.country);
+        console.log("Date of the Event: " + event.datetime);
+        console.log("Name of the venue: " + event.venue.name);
+        console.log("Venue location: " + event.venue.city + " " + event.venue.country);
       }
     } else {
       console.log("No shows coming up :(");
