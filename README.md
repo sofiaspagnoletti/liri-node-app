@@ -10,7 +10,7 @@ To run the app the user need to type in the terminal/command line <node liri.js>
 - `do-what-it-says` in this case, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands
 
 ### Prerequisites
-This app cannot be deployed to GitHub pages but you can take a look at its funcionality by clicking on this link:
+This app cannot be deployed to GitHub pages but you can take a look at its funcionality by clicking on this link: https://drive.google.com/open?id=1fKEqaIrNKMPr_JwzkywLh-W6uWsVfw9t
 
 ### Built With
 Visual Studio Code, Axios package, Dotenv package, Bands in Town API, Spotify API and OMDB API.
