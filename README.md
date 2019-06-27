@@ -13,12 +13,7 @@ To run the app the user need to type in the terminal/command line <node liri.js>
 This app cannot be deployed to GitHub pages but you can take a look at its funcionality by clicking on this link:
 
 ### Built With
-Visual Studio Code
-Axios package
-Dotenv package
-Bands in Town API
-Spotify API
-OMDB API
+Visual Studio Code, Axios package, Dotenv package, Bands in Town API, Spotify API and OMDB API.
 
 ### Authors
 Sofia Spagnoletti
