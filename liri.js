@@ -5,29 +5,42 @@ var fs = require("fs");
 var axios = require("axios");
 
 //command would be what the user ask liri to do. ex: 'concert-this'.
-var command = process.argv[2];
+var mainCommand = process.argv[2];
 
 //argument is whatever the user is searching for after typing the command
 var argument = process.argv.slice(3).join(" ");
 
 //links commands with the function liri would be responding with
-if (command === "concert-this") {
-  searchForConcerts(argument);
-} else if (command === "movie-this") {
-  searchForMovie(argument);
-} else if (command === "spotify-this-song") {
-  searchForTrack(argument);
-} else if (command === "do-what-it-says") {
-  fs.readFile("random.txt", "utf8", function (error, data) {
 
+if (mainCommand === "do-what-it-says") {
+  fs.readFile("random.txt", "utf8", function (error, data) {
     if (error) {
       return console.log(error);
     }
     // console.log(data);
-    var dataArr = data.split(",");
-    console.log(dataArr);
-
+    var dataArr = data.split("\n");
+    //reads file and splits the elements between the command and argument
+    for (let i = 0; i < dataArr.length; i++) {
+      const element = dataArr[i];
+      var elementArr = element.split(",");
+      var argLength = elementArr[1].length;
+      var argumentClean = elementArr[1].substr(1,argLength-2);
+      executeCommand(elementArr[0], argumentClean);
+    }
   });
+}
+else {
+  executeCommand(mainCommand, argument);
+}
+
+function executeCommand(command, argument) {
+  if (command === "concert-this") {
+    searchForConcerts(argument);
+  } else if (command === "movie-this") {
+    searchForMovie(argument);
+  } else if (command === "spotify-this-song") {
+    searchForTrack(argument);
+  }
 }
 
 //this function is the one searching for the track the user enters using the spotify api and console.logs the information we we want to show with the app. 
@@ -49,6 +62,7 @@ function searchForTrack(track) {
       for (let i = 0; i < data.tracks.items[0].artists.length; i++) {
         console.log("Artist: " + data.tracks.items[0].artists[i].name);
       }
+      console.log("==============");
     }
   });
 }
@@ -70,6 +84,7 @@ function searchForMovie(movie) {
     else {
       console.log("No movie available :(");
     }
+    console.log("==============");
   })
     .catch(function (error) {
       if (error.response) {
@@ -102,6 +117,7 @@ function searchForConcerts(artist) {
     } else {
       console.log("No shows coming up :(");
     }
+    console.log("==============");
   })
     .catch(function (error) {
       if (error.response) {
