@@ -21,7 +21,7 @@ Spotify API
 OMDB API
 
 ## Authors
-Sofia Sppagnoletti
+Sofia Spagnoletti
 
 ## License
 This project is not licensed.
